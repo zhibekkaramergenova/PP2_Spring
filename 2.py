@@ -1,71 +1,53 @@
-import pygame
-import math
+import psycopg2
+con= psycopg2.connect("dbname=postgres user=postgres password=Karzhimerbek2002")
+cur= con.cursor()
+# cur.execute(""" 
+# CREATE TABLE person(
+# name varchar(255),
+# surname varchar(255),
+# id integer,
+# student_points integer,
+# joined_date date);
 
-pygame.init()
+# """)
 
-width, height = 600, 480
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption('sin & cos')
+# cur.execute(""" 
+# INSERT INTO person(name, surname, id, student_points, joined_date) VALUES('Zhibek','Kar', '2153','34','21.05.08')
 
-white, black = (255, 255, 255), (0, 0, 0)
-red, blue = (255, 0, 0), (0, 0, 255)
+# """)
+# cur.execute(""" 
+# INSERT INTO person(name, surname, id, student_points, joined_date) VALUES('Alish','Mad', '2145','120','21.05.08')
 
-font = pygame.font.SysFont('comicsansms', 12)
+# """)
+# cur.execute(""" 
+# INSERT INTO person(name, surname, id, student_points, joined_date) VALUES('Baiko','Lesbek', '2155','160','21.05.08')
 
-nums = [' 1.00', ' 0.75', ' 0.50', ' 0.25', ' 0.00', '-0.25', '-0.50', '-0.75', '-1.00']
-radians = ['-3π', ' 5π', '-2π', '-3π', '-π', '-π', '  0', ' π', '  π', '3π', '2π', '5π', '3π']
+# """)
 
-run = True
-while run:
-    screen.fill(white)
-    for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                        run = False
-    
-    pygame.draw.rect(screen, black, pygame.Rect(40, 40, width - 80, height - 120), 2)
-    pygame.draw.line(screen, black, (300, 40), (300, height - 80), 2)
-    pygame.draw.line(screen, black, (40, 220), (width - 40, 220), 2)
-    for step in range(60, 600, 80):
-        pygame.draw.line(screen, black, (step, 40), (step, height - 80))
-    for step in range(60, 400, 40):
-        pygame.draw.line(screen, black, (40, step), (width - 40, step))
-    for step in range(60, 541, 10):
-        pygame.draw.line(screen, black, (step, 40), (step, 45))
-        pygame.draw.line(screen, black, (step, height - 85), (step, height - 80))
-        if (step - 20) % 20 == 0:
-            pygame.draw.line(screen, black, (step, 40), (step, 50))
-            pygame.draw.line(screen, black, (step, height - 90), (step, height - 80))
-        if (step - 20) % 40 == 0:
-            pygame.draw.line(screen, black, (step, 40), (step, 55))
-            pygame.draw.line(screen, black, (step, height - 95), (step, height - 80))
-    for step in range(60, 381, 10):
-        pygame.draw.line(screen, black, (40, step), (45, step))
-        pygame.draw.line(screen, black, (width - 45, step), (width - 40, step))
-        if (step - 20) % 20 == 0:
-            pygame.draw.line(screen, black, (40, step), (50, step))
-            pygame.draw.line(screen, black, (width - 50, step), (width - 40, step))
-    pygame.draw.line(screen, white, (380, 61), (380, 99))
+# cur.execute("""
+# UPDATE person
+#     SET student_points='200',
+#     joined_date='21.05.09'
+#     WHERE name='Zhibek';
 
-    y = 50
-    for i in nums:
-        screen.blit(font.render(i, 1, black), (10, y))
-        y += 40
-    x = 50
-    for i in range(len(radians)):
-        if i % 2 == 0:
-            screen.blit(font.render(radians[i], 1, black), (x, height - 80))
-        else:
-            screen.blit(font.render(radians[i], 1, black), (x, height - 83))
-            pygame.draw.line(screen, black, (x, height - 68), (x + 20, height - 68))
-            screen.blit(font.render('2', 1, black), (x + 5, height - 69))
-        x += 40
 
-    font = pygame.font.SysFont('comicsansms', 18)
-    screen.blit(font.render('sin x', 1, black), (360, 55))
-    screen.blit(font.render('cos x', 1, black), (360, 75))
-    screen.blit(font.render('X', 1, black), (295, 430))
-    pygame.draw.line(screen, red, (410, 70), (435, 70), 2)
-    for i in range(410, 435, 9): pygame.draw.line(screen, blue, (i, 90), (i + 7, 90), 2)
-    font = pygame.font.SysFont('comicsansms', 12)
+# """)
 
-    pygame.display.flip()
+cur.execute("""
+DELETE FROM person
+WHERE id='2155';
+""")
+cur.execute("""
+SELECT*FROM person
+""")
+row = cur.fetchone()
+while row is not None:
+    print(row)
+    row = cur.fetchone()
+
+
+cur.close()
+con.commit()
+con.close()
+
+
